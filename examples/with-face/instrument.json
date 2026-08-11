@@ -1,0 +1,27 @@
+{
+  "name": "EXAMPLE-1",
+  "bench": "EXAMPLE-1",
+  "maker": "Your Company",
+  "role": "SYNTH",
+  "midiName": "EXAMPLE-1",
+  "offline": "NOT PLUGGED IN.",
+  "online": "CONNECTED OVER USB.",
+  "driver": "example.sh",
+  "folders": ["library", "backups"],
+  "publishes": [{ "folder": "library", "mark": "PATCH" }],
+  "face": {
+    "wells": [
+      { "label": "PATCHES", "folder": "library", "ext": "syx" }
+    ],
+    "verbs": [
+      { "label": "BACKUP", "run": ["backup"] },
+      { "label": "INDEX", "run": ["index"], "needs": "mounted" },
+      {
+        "label": "WIPE",
+        "run": ["wipe"],
+        "needs": "mounted",
+        "confirm": "ERASES THE UNIT'S MEMORY."
+      }
+    ]
+  }
+}

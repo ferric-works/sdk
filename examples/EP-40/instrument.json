@@ -1,0 +1,10 @@
+{
+  "name": "EP-40",
+  "bench": "EP-40",
+  "maker": "Roland",
+  "role": "PIANO",
+  "midiName": "EP-40",
+  "offline": "NOT PLUGGED IN.",
+  "online": "CONNECTED OVER USB.",
+  "folders": ["takes", "presets"]
+}
