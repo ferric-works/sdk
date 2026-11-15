@@ -70,7 +70,7 @@ audio thread, so the clock is locked to the audio and not to a timer.
 | P-16 follows clock | PROPOSED | The P-16 app opens no MIDI input. It can lead; it cannot follow. |
 | D-65, T-2, L-1 | n/a | No clock in or out. D-65 has no sequencer, T-2 listens to audio, L-1 makes no sound of its own. |
 | Song position, continue from a bar | PROPOSED | Not sent, not read. A follower starts from the top. |
-| Tempo over the network | PARTIAL | J-17 alone joins a network tempo session (Ableton Link) for tempo and bar phase. The others do not. |
+| Tempo over the network | PARTIAL | J-17 alone joins a shared tempo session on the local network, for tempo and bar phase. The others do not. |
 | Two leaders at once | PARTIAL | Nothing arbitrates. If R-4 and P-16 both send, J-17 counts both. Run one leader. |
 
 **What a hardware maker can rely on today:** send standard clock and

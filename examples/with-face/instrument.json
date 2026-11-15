@@ -1,9 +1,9 @@
 {
-  "name": "EXAMPLE-1",
-  "bench": "EXAMPLE-1",
+  "name": "EXAMPLE-4",
+  "bench": "EXAMPLE-4",
   "maker": "Your Company",
   "role": "SYNTH",
-  "midiName": "EXAMPLE-1",
+  "midiName": "EXAMPLE-4",
   "offline": "NOT PLUGGED IN.",
   "online": "CONNECTED OVER USB.",
   "driver": "example.sh",

@@ -24,9 +24,9 @@ device, so a build carries no reference to hardware you don't own.
 
 ```
 HARDWARE/
-  JU-06A/
+  EXAMPLE-8/
     instrument.json     required — what it is and how we know it's there
-    ju06a.sh            optional — the tool that touches the unit
+    example8.sh         optional — the tool that touches the unit
     README.md           optional — the machine's own documentation
     factory/            optional — immutable reference, installed to the bench
 ```
@@ -42,10 +42,10 @@ beside the packs without confusing anything.
 | `name` | string | **yes** | What the sidebar says. Also the FROM plate its prints wear, so it must match the stem you file prints under. |
 | `bench` | string | **yes** | Folder under `~/Documents/Music/Instruments/`. Usually the same as `name`. |
 | `panel` | string | no | `generic` (default) or a built-in panel name. See **Panels** below. |
-| `maker` | string | no | `ROLAND` — printed above the name. |
+| `maker` | string | no | The company name, printed above the name. |
 | `role` | string | no | `SYNTH` · `SAMPLER` · `DRUM MACHINE` — what it does. |
 | `volume` | string | no | An absolute path that exists when the unit mounts. |
-| `cardMarker` | string | no | A folder name identifying its card on any volume (the 404's `ROLAND`). |
+| `cardMarker` | string | no | A folder name identifying its card on any volume: the folder the unit itself creates when it formats a card. |
 | `volumeNames` | [string] | no | Volume names to accept — a card formatted for it but never used carries only a name. |
 | `midiName` | string | no | Substring of its CoreMIDI display name. Proves USB presence when no disk mounts. |
 | `driver` | string | no | One script in the pack, installed to the bench and made executable. |
@@ -95,8 +95,9 @@ driver and the docs follow.
 
 There are three faces a machine can wear, in order of preference:
 
-1. **A built-in panel**, when `panel` names one L-1 compiled — today `ju06a`
-   and `sp404`. Those two machines earned bespoke faces.
+1. **A built-in panel**, when `panel` names one L-1 compiled. Two machines
+   have one today: a synth module with a slot map, and a pad sampler with
+   a pad wall and a step roll.
 2. **A declared face**, when the pack carries a `face` block. Described below.
 3. **The generic station** — plates, lamp, offline/online line, a door to the
    bench. What you get with neither of the above, and still a usable station.
@@ -150,7 +151,7 @@ every file.
 
 A verb with no `driver` in the pack is ignored — there'd be nothing to run.
 
-**Use `confirm` on anything destructive.** L-1's own JU-06A panel asks before
+**Use `confirm` on anything destructive.** L-1's own built-in synth panel asks before
 writing patch slots, because that verb reaches past the bench into hardware.
 A declared face should hold itself to the same standard; nothing in the format
 forces it, and that is exactly why it's worth saying.
@@ -211,16 +212,16 @@ of which one writes and asks first.
 ## A minimal pack
 
 ```
-HARDWARE/EP-40/instrument.json
+HARDWARE/EXAMPLE-1/instrument.json
 ```
 
 ```json
 {
-  "name": "EP-40",
-  "bench": "EP-40",
-  "maker": "Roland",
+  "name": "EXAMPLE-1",
+  "bench": "EXAMPLE-1",
+  "maker": "Your Company",
   "role": "PIANO",
-  "midiName": "EP-40",
+  "midiName": "EXAMPLE-1",
   "offline": "NOT PLUGGED IN.",
   "online": "CONNECTED OVER USB.",
   "folders": ["takes", "presets"]

@@ -58,7 +58,7 @@ it holds one drawer per machine. Hardware stations run on the Mac; the
 phone and tablet see the patches a machine published.
 
 Most hardware ships with its own companion app: a librarian on Mac, another
-on Windows, a browser tool at the mercy of WebMIDI, a mobile app that needs
+on Windows, a browser tool at the mercy of the browser, a mobile app that needs
 a team. Every one of them has to be rebuilt each time an operating system
 moves. None of that work is the instrument.
 
@@ -101,7 +101,7 @@ for good.
 
 | Folder | What it is |
 |---|---|
-| [examples/EP-40](examples/EP-40/instrument.json) | The minimal pack: ten lines, a working machine. |
+| [examples/minimal](examples/minimal/instrument.json) | The minimal pack: ten lines, a working machine. |
 | [examples/with-face](examples/with-face) | A declared face: wells, verbs, a confirmation, and the driver they run. |
 | [examples/complete](examples/complete) | Every part of version 1 in one pack, with a driver that really backs up, diffs and restores a unit that mounts as a disk. |
 
