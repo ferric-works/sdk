@@ -15,11 +15,11 @@
     ],
     "verbs": [
       { "label": "BACKUP", "run": ["backup"] },
-      { "label": "INDEX", "run": ["index"], "needs": "mounted" },
+      { "label": "INDEX", "run": ["index"], "needs": "pluggedIn" },
       {
         "label": "WIPE",
         "run": ["wipe"],
-        "needs": "mounted",
+        "needs": "pluggedIn",
         "confirm": "ERASES THE UNIT'S MEMORY."
       }
     ]

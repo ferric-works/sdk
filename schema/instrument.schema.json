@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ferric.works/sdk/schema/instrument-1.json",
+  "title": "Ferric instrument pack, format 1",
+  "description": "instrument.json at the head of a pack folder in L-1's HARDWARE aisle. Written from the decoder L-1 ships (InstrumentSpec, PanelFace). Unknown keys are ignored by L-1 and so allowed here; a known key of the wrong type makes L-1 skip the whole pack, so types are strict.",
+  "type": "object",
+  "required": ["name", "bench"],
+  "additionalProperties": true,
+  "properties": {
+    "name": {
+      "type": "string", "minLength": 1,
+      "description": "What the sidebar says, and the FROM plate its prints wear."
+    },
+    "bench": {
+      "type": "string", "minLength": 1, "pattern": "^[^/\\\\:]+$",
+      "description": "Folder under ~/Documents/Music/Instruments/. One path component."
+    },
+    "panel": {
+      "type": "string",
+      "description": "generic (default) or a built-in panel name. An unknown name falls back to the declared face or the generic station."
+    },
+    "maker": { "type": "string", "description": "Printed above the name." },
+    "role": { "type": "string", "description": "SYNTH, SAMPLER, DRUM MACHINE, PIANO: what it does." },
+    "volume": {
+      "type": "string", "pattern": "^/",
+      "description": "Absolute path that exists when the unit mounts."
+    },
+    "cardMarker": {
+      "type": "string", "minLength": 1,
+      "description": "Folder name that identifies the unit's card on any mounted volume."
+    },
+    "volumeNames": {
+      "type": "array", "items": { "type": "string", "minLength": 1 },
+      "description": "Volume names to accept, compared without case."
+    },
+    "midiName": {
+      "type": "string", "minLength": 1,
+      "description": "Substring of the unit's MIDI source display name, compared without case."
+    },
+    "driver": {
+      "type": "string", "minLength": 1, "pattern": "^[^/]+$",
+      "description": "One script in the pack, installed to the bench and made executable. The declared face runs it with bash."
+    },
+    "drivers": {
+      "type": "array", "items": { "type": "string", "minLength": 1, "pattern": "^[^/]+$" },
+      "description": "Further tools installed to the bench."
+    },
+    "docs": {
+      "type": "array", "items": { "type": "string", "minLength": 1 },
+      "description": "Authored text installed to the bench."
+    },
+    "reference": {
+      "type": "array", "items": { "type": "string", "minLength": 1 },
+      "description": "Immutable folders installed when the bench's copy is empty."
+    },
+    "publishes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["folder"],
+        "properties": {
+          "folder": { "type": "string", "minLength": 1 },
+          "mark": { "type": "string", "minLength": 1, "description": "The kind word a published stem ends with." }
+        }
+      },
+      "description": "Bench folders whose sounds reach the PATCHES shelf."
+    },
+    "folders": {
+      "type": "array", "items": { "type": "string", "minLength": 1 },
+      "description": "Bench subfolders created on first launch."
+    },
+    "offline": { "type": "string", "description": "The line under the name when the machine is not there." },
+    "online": { "type": "string", "description": "The line under the name when it is." },
+    "rolandApp": {
+      "type": "string", "pattern": "^/",
+      "description": "Absolute path to the maker's own utility. Read only by one built-in panel today; the key keeps its first name in format 1."
+    },
+    "face": {
+      "type": "object",
+      "description": "A declared face: wells count the bench, verbs run the driver.",
+      "properties": {
+        "wells": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["label", "folder"],
+            "properties": {
+              "label": { "type": "string", "minLength": 1 },
+              "folder": { "type": "string", "minLength": 1 },
+              "ext": { "type": "string" }
+            }
+          }
+        },
+        "verbs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["label", "run"],
+            "properties": {
+              "label": { "type": "string", "minLength": 1 },
+              "run": { "type": "array", "items": { "type": "string" } },
+              "needs": { "type": "string", "description": "mounted or pluggedIn. Any other value leaves the verb always live." },
+              "confirm": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

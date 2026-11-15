@@ -1,6 +1,22 @@
 # THE INSTRUMENT PACK
 
-*Format version 1. L-1 · LIBRARY.*
+*Format version 1. L-1 · LIBRARY. Status: SHIPPED, on the Mac.*
+
+**Where it runs.** L-1 reads packs, senses machines and runs drivers on
+the Mac. That code is compiled for macOS only. On iPhone and iPad L-1
+shows what a pack published to the PATCHES shelf, and nothing else of the
+machine: no station, no lamp, no verbs.
+
+**The schema.** [`schema/instrument.schema.json`](schema/instrument.schema.json)
+is this document as JSON Schema (draft 2020-12), written from the decoder
+L-1 ships. [`tools/validate-pack.py`](tools/validate-pack.py) checks a
+pack against it and then checks the folder around the manifest:
+
+```
+tools/validate-pack.py path/to/YOUR-MACHINE
+```
+
+**What version 1 promises.** See [Versioning](#versioning) at the end.
 
 A machine is a **folder**. Drop it in, it appears under HARDWARE. Delete it,
 it's gone and stays gone. Nothing in L-1's source or its project file names a
@@ -40,7 +56,8 @@ beside the packs without confusing anything.
 | `folders` | [string] | no | Bench subfolders created on first launch. |
 | `offline` | string | no | The line under the name when the machine isn't there. |
 | `online` | string | no | The line under the name when it is. |
-| `rolandApp` | string | no | Absolute path to the maker's own utility, when one exists. |
+| `rolandApp` | string | no | Absolute path to the maker's own utility, when one exists. Read by one built-in panel only. The key keeps its first name in version 1; a neutral `makerApp` is proposed. |
+| `face` | object | no | A declared face. See **The `face` block** below. |
 
 `publishes` entries are `{ "folder": "library", "mark": "PATCH" }`. `mark` is
 the kind WORD the published stem ends with — the naming law reads it off the
@@ -49,11 +66,22 @@ the same name.
 
 ### Detection
 
-L-1 decides a machine is present by trying, in order: `volume` as a literal
-path, then any volume carrying `cardMarker`, then any volume whose name is in
-`volumeNames`, then `midiName` against CoreMIDI. Declare whichever apply. A
-pack with none of them is still legal — it simply always reads OFFLINE, which
-is honest for a machine L-1 has no way to sense.
+L-1 senses two separate things every two seconds, and a verb can wait on
+either.
+
+- **Mounted.** `volume` as a literal path, then any volume carrying
+  `cardMarker`, then any volume whose name is in `volumeNames`. The lamp
+  is green, the `online` line shows, and verbs with `"needs": "mounted"`
+  go live.
+- **Plugged in.** `midiName` found, without regard to case, in the display
+  name of any MIDI source. On a declared face the lamp is copper and verbs
+  with `"needs": "pluggedIn"` go live. The `online` line still waits for a
+  mount.
+
+Declare whichever apply. A pack with none of them is still legal — it simply
+always reads OFFLINE, which is honest for a machine L-1 has no way to sense.
+A verb that needs `mounted` in a pack with only a `midiName` can never
+light; the validator calls that an error.
 
 ### Why `reference` tests for empty rather than absent
 
@@ -73,8 +101,16 @@ There are three faces a machine can wear, in order of preference:
 3. **The generic station** — plates, lamp, offline/online line, a door to the
    bench. What you get with neither of the above, and still a usable station.
 
-An unrecognised `panel` name and a malformed `face` both fall back rather than
-fail. A pack is never worse off for trying something L-1 doesn't know.
+An unrecognised `panel` name falls back rather than fails, and a key L-1
+does not know is ignored. A pack is never worse off for trying something
+L-1 doesn't know.
+
+**A malformed manifest is not forgiven, and that includes the `face`.** A
+known key of the wrong type, or a well or verb missing a required key,
+makes L-1 skip the whole pack: the machine does not appear, and nothing
+says why. (This document said a malformed `face` falls back to the generic
+station. The shipped decoder does not do that. Falling back is proposed;
+see ROADMAP.md.) Run the validator before you drop a pack in.
 
 ## The `face` block
 
@@ -148,6 +184,30 @@ The packs L-1 ships are copied to HARDWARE once, when the aisle holds no
 packs. Delete one afterwards and it stays deleted. A seed is a starting point,
 not a default that reasserts itself.
 
+## The driver contract
+
+What L-1 does with a `driver`, exactly, so a script can rely on it:
+
+- Installed from the pack to the bench once, mode 755. An existing bench
+  copy is never overwritten: the player's edits win.
+- Run as `/bin/bash <bench>/<driver> <run...>` with the bench as the
+  working directory. Write it for bash whatever its extension.
+- Standard output and standard error are captured together. The last
+  thirty lines of a run are shown on the station's console.
+- Exit status 0 prints `· DONE`. Anything else prints `· FAILED (n)`.
+- One verb runs at a time per station. The wells are counted again after
+  each run.
+- Nothing is passed in the environment and nothing is read back but the
+  text. A driver that needs the unit's mount point knows it already; it
+  is the same path the pack declared.
+
+## A complete pack
+
+[`examples/complete`](examples/complete) uses every part of version 1 a
+pack can use without a built-in panel: three kinds of detection, a
+driver, docs, a factory reference, a publish rule, wells, and four verbs
+of which one writes and asks first.
+
 ## A minimal pack
 
 ```
@@ -170,3 +230,25 @@ HARDWARE/EP-40/instrument.json
 That is a working machine: it appears under HARDWARE, lights its lamp when the
 unit is plugged in, builds its bench, and opens it. No script, no panel, no
 Swift.
+
+## Versioning
+
+The format number is the `1` in the title. There is no version key in the
+manifest, because version 1 never needed one.
+
+**Version 1 promises:**
+
+- Every key in the table above keeps its name, its type and its meaning.
+- New optional keys may be added. L-1 ignores keys it does not know, so a
+  pack written today keeps loading, and a pack using a newer key still
+  loads in an older L-1 without that feature.
+- No key becomes required. `name` and `bench` are the only two, for good.
+- The driver contract above does not change in a way that breaks a
+  script that follows it.
+
+**A version 2** would be a change that breaks one of those. It would be
+announced in this repository first, carry a `"format": 2` key so both can
+be told apart, and L-1 would keep reading version 1 packs.
+
+The schema's `$id` carries the format number. The schema file may gain
+optional keys within version 1; it will not tighten.

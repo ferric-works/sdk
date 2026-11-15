@@ -1,34 +1,61 @@
 # THE FERRIC SDK
 
-*The integration standard for L-1 · LIBRARY. Format v1. MIT.*
+*How hardware and other software meet the Ferric instruments. MIT.*
 
-One folder and one JSON file put your machine in the player's library —
-its own station, its patch library on every device they own, its backups,
-its lamp lit when the unit is plugged in.
+Ferric makes six instruments: T-2 Tuner, R-4 Recorder, L-1 Library,
+J-17 Poly Synth, P-16 Sampler and D-65 Amp & Effects. This repository is
+the written standard for connecting things to them: a controller, a
+machine with its own sound, or another program.
+
+It is a set of documents, a schema, examples and one checking tool. There
+is no library to link and nothing to install.
+
+## What is here, and what state it is in
+
+| Document | Covers | State |
+|---|---|---|
+| [INSTRUMENT-PACK.md](INSTRUMENT-PACK.md) | One folder and one JSON file put a machine in the L-1 library. Format version 1, with a [schema](schema/instrument.schema.json). | **Shipped**, on the Mac. |
+| [HARDWARE.md](HARDWARE.md) | What each instrument does with MIDI today: clock, transport, notes, control changes. And the controller map. | Today's behaviour is **shipped** and listed per instrument. The controller map is **proposed**. |
+| [SOFTWARE.md](SOFTWARE.md) | Files and folders, Audio Unit parameters and state, virtual MIDI ports, links. | Mostly **shipped**; the file formats are not versioned yet. |
+| [ROADMAP.md](ROADMAP.md) | What gets built next, in order. | A plan. |
+| [tools/validate-pack.py](tools/validate-pack.py) | Checks a pack before you drop it in. Python 3, nothing else. | **Works.** |
+
+Every line in those documents is marked SHIPPED, PARTIAL or PROPOSED.
+SHIPPED means it was read in the instrument's source. It does not mean a
+particular device was plugged in and tried.
+
+## The shortest integration
 
 ```
-HARDWARE/EP-40/instrument.json
+HARDWARE/EXAMPLE-8/instrument.json
 
 {
-  "name":     "EP-40",
-  "bench":    "EP-40",
-  "maker":    "Roland",
-  "role":     "PIANO",
-  "midiName": "EP-40",
+  "name":     "EXAMPLE-8",
+  "bench":    "EXAMPLE-8",
+  "maker":    "Your Company",
+  "role":     "SYNTH",
+  "midiName": "EXAMPLE-8",
   "offline":  "NOT PLUGGED IN.",
   "online":   "CONNECTED OVER USB.",
   "folders":  ["takes", "presets"]
 }
 ```
 
-That is a working integration. No linked library, no binary, no firmware
-change, no code.
+That is a working integration with L-1 on the Mac: the machine has a
+station in the library, a folder of its own for backups and patches, and
+a lamp that lights when the unit is plugged in. No linked library, no
+binary, no firmware change, no code.
+
+```
+tools/validate-pack.py examples/complete
+```
 
 ## What this is
 
 [L-1](https://ferric.works/l-1) is Ferric's librarian — one room for
-everything a player owns, on Mac, iPhone and iPad. Free. It reads every
-file it is pointed at and it holds one drawer per machine.
+everything a player owns. Free. It reads every file it is pointed at and
+it holds one drawer per machine. Hardware stations run on the Mac; the
+phone and tablet see the patches a machine published.
 
 Most hardware ships with its own companion app: a librarian on Mac, another
 on Windows, a browser tool at the mercy of WebMIDI, a mobile app that needs
@@ -70,25 +97,26 @@ revenue share, no partner tier. A library that only knows its own shop is
 a walled garden with better manners — so the door is open, to everyone,
 for good.
 
-## In this repo
+## Examples
 
-| File | What it is |
+| Folder | What it is |
 |---|---|
-| [INSTRUMENT-PACK.md](INSTRUMENT-PACK.md) | The full format v1 specification — every key, detection, panels, the `face` block |
-| [examples/EP-40](examples/EP-40/instrument.json) | The minimal pack — ten lines, a working machine |
-| [examples/with-face](examples/with-face/instrument.json) | A pack with a declared face — wells, verbs, confirmations |
+| [examples/EP-40](examples/EP-40/instrument.json) | The minimal pack: ten lines, a working machine. |
+| [examples/with-face](examples/with-face) | A declared face: wells, verbs, a confirmation, and the driver they run. |
+| [examples/complete](examples/complete) | Every part of version 1 in one pack, with a driver that really backs up, diffs and restores a unit that mounts as a disk. |
 
-The instrument pack is the first of four manifests — a machine, a pack, a
-song, a wing — all one idea: a small declarative file beside the thing it
-describes. The rest publish here as they settle.
+The instrument pack is the first of several manifests, all one idea: a
+small declarative file beside the thing it describes. The controller map
+is the next; its draft is in [HARDWARE.md](HARDWARE.md).
 
 ## Start
 
 1. **Write** an `instrument.json` for your machine — start from the
    examples.
-2. **Test** it — drop the folder into L-1's `HARDWARE/` and the station
-   appears.
-3. **Reach out** — [hello@ferric.works](mailto:hello@ferric.works), or
+2. **Check** it — `tools/validate-pack.py path/to/YOUR-MACHINE`.
+3. **Test** it — drop the folder into L-1's `HARDWARE/` on a Mac and the
+   station appears.
+4. **Reach out** — [hello@ferric.works](mailto:hello@ferric.works), or
    open an issue. If your machine needs a bespoke panel — pad grids, slot
    maps, step editors — that is a built-in, and we build those with makers
    directly.

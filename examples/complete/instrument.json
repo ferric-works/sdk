@@ -1,0 +1,34 @@
+{
+  "name": "EXAMPLE-8",
+  "bench": "EXAMPLE-8",
+  "maker": "Your Company",
+  "role": "SYNTH",
+  "volume": "/Volumes/EXAMPLE-8",
+  "volumeNames": ["EXAMPLE8", "EX8"],
+  "midiName": "EXAMPLE-8",
+  "offline": "OFFLINE. HOLD [SHIFT] ON POWER-UP AND IT MOUNTS.",
+  "online": "MOUNTED. THE VERBS ARE LIVE.",
+  "driver": "example8.sh",
+  "docs": ["README.md"],
+  "reference": ["factory"],
+  "folders": ["library", "backups", "factory"],
+  "publishes": [{ "folder": "library", "mark": "PATCH" }],
+  "face": {
+    "wells": [
+      { "label": "PATCHES", "folder": "library", "ext": "syx" },
+      { "label": "BACKUPS", "folder": "backups" },
+      { "label": "FACTORY", "folder": "factory", "ext": "syx" }
+    ],
+    "verbs": [
+      { "label": "STATUS", "run": ["status"] },
+      { "label": "BACKUP", "run": ["backup"], "needs": "mounted" },
+      { "label": "DIFF", "run": ["diff"] },
+      {
+        "label": "RESTORE",
+        "run": ["restore", "latest"],
+        "needs": "mounted",
+        "confirm": "OVERWRITES EVERY PATCH ON THE UNIT WITH THE LAST BACKUP."
+      }
+    ]
+  }
+}
