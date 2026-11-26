@@ -116,7 +116,7 @@ is the next; its draft is in [HARDWARE.md](HARDWARE.md).
 2. **Check** it — `tools/validate-pack.py path/to/YOUR-MACHINE`.
 3. **Test** it — drop the folder into L-1's `HARDWARE/` on a Mac and the
    station appears.
-4. **Reach out** — [hello@ferric.works](mailto:hello@ferric.works), or
+4. **Reach out** — [support@ferric.works](mailto:support@ferric.works), or
    open an issue. If your machine needs a bespoke panel — pad grids, slot
    maps, step editors — that is a built-in, and we build those with makers
    directly.
